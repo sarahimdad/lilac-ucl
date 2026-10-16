@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UCL Copilot</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1><span class="wave">👋</span> UCL Copilot</h1>
+    <span id="greet"></span>
+  </div>
+  <span id="mode" class="badge"></span>
+  <nav>
+    <button data-tab="week" class="active">Week</button>
+    <button data-tab="voice">Voice</button>
+    <button data-tab="budget">Budget</button>
+    <button data-tab="events">Events</button>
+    <button data-tab="setup">Setup</button>
+  </nav>
+</header>
+
+<main>
+  <section id="week" class="tab active">
+    <div class="row">
+      <button id="makePlan" class="primary">✨ Plan my week with Claude</button>
+      <span id="planStatus" class="muted"></span>
+    </div>
+    <div class="card" id="progressCard" hidden>
+      <strong id="progressText"></strong>
+      <div class="progress"><div id="progressBar"></div></div>
+    </div>
+    <p id="planSummary" class="muted"></p>
+    <ul id="warnings" class="warn"></ul>
+    <div id="agenda"></div>
+  </section>
+
+  <section id="voice" class="tab">
+    <p class="muted">Talk about what's on your plate. Claude turns it into tasks you can add to your week.</p>
+    <div class="row">
+      <button id="mic" class="primary">🎙️ Start talking</button>
+      <span id="micStatus" class="muted"></span>
+    </div>
+    <textarea id="dump" rows="5" placeholder="e.g. I've got the stats coursework due Thursday, a society meeting tomorrow and I need to read two papers..."></textarea>
+    <button id="parseDump">Turn into tasks</button>
+    <p id="dumpTip" class="muted"></p>
+    <ul id="dumpTasks"></ul>
+  </section>
+
+  <section id="budget" class="tab">
+    <p class="muted">Upload a Revolut/bank CSV. It is parsed in your browser; only merchant descriptions and amounts go to Claude (no dates, names or account numbers).</p>
+    <div class="row">
+      <input type="file" id="csvFile" accept=".csv">
+      <button id="csvSample">Use sample statement</button>
+    </div>
+    <div id="csvPreview" class="muted"></div>
+    <button id="runBudget" class="primary" hidden>Categorise and analyse</button>
+    <div id="budgetOut"></div>
+  </section>
+
+  <section id="events" class="tab">
+    <p class="muted">Tick your clubs to see what's on. Free food is highlighted.</p>
+    <div id="clubs"></div>
+    <div id="eventList"></div>
+  </section>
+
+  <section id="setup" class="tab">
+    <h2>Import your calendars</h2>
+    <p class="muted">UCL timetable: <a href="https://timetable.ucl.ac.uk/custom" target="_blank" rel="noopener">timetable.ucl.ac.uk</a> → export/subscribe → download the .ics file.<br>
+    Moodle: Calendar → Export calendar → download the .ics file.</p>
+    <div class="grid">
+      <label>Timetable .ics <input type="file" id="ttFile" accept=".ics"></label>
+      <label>Moodle .ics <input type="file" id="mdFile" accept=".ics"></label>
+    </div>
+    <p><strong>Easiest:</strong> on <a href="https://timetable.ucl.ac.uk/custom" target="_blank" rel="noopener">timetable.ucl.ac.uk</a> copy your personal iCal/calendar link, paste it below and click Sync. It stays in your browser only.</p>
+    <label>Your UCL timetable link</label>
+      <input type="url" id="ttUrl" placeholder="https://timetable.apps.ucl.ac.uk/icalendar/..." style="width:100%;padding:8px">
+    </label>
+    <div class="row"><button id="ttSync" class="primary">Sync timetable</button></div>
+    <button id="loadSample">Load sample data</button>
+    <button id="clearAll" class="danger">Clear all data</button>
+    <p id="setupStatus" class="muted"></p>
+    <p class="muted">Everything is stored only in this browser.</p>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

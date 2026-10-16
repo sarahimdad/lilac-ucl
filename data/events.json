@@ -1,0 +1,8 @@
+[
+  {"club":"UCL Entrepreneurs","title":"Founder Fireside Chat","when":"2026-10-20T18:30","where":"Bloomsbury Theatre","cost":0,"food":true},
+  {"club":"Claude Builder Club UCL","title":"Prompting Workshop","when":"2026-10-21T17:00","where":"Roberts Building","cost":0,"food":true},
+  {"club":"UCL Salsa Society","title":"Beginner Social Night","when":"2026-10-22T19:30","where":"Student Centre","cost":4,"food":false},
+  {"club":"UCL Hiking Society","title":"Box Hill Day Trip","when":"2026-10-24T09:00","where":"Meet at Euston","cost":12,"food":false},
+  {"club":"UCL Film Society","title":"Free Screening: Parasite","when":"2026-10-23T19:00","where":"Gordon Street","cost":0,"food":false},
+  {"club":"UCL Entrepreneurs","title":"Pitch Practice Night","when":"2026-10-22T18:00","where":"Roberts 421","cost":0,"food":true}
+]
