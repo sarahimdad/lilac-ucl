@@ -1,4 +1,4 @@
-# Bloom 🌸
+# Lilac 💜
 
 **Your UCL week, made lighter.**
 
