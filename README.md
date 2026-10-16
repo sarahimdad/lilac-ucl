@@ -1,4 +1,6 @@
-# UCL Copilot
+# Bloom 🌸
+
+**Your UCL week, made lighter.**
 
 A voice-first student-life copilot for UCL students, built with Claude for the Claude Campus Hackathon (track: Better Student Life).
 

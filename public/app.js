@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-const KEY = 'ucl-copilot-v1';
+const KEY = 'bloom-ucl-v1';
 let state = { classes: [], deadlines: [], extra: [], blocks: [], clubs: [], tx: [], done: {} };
 try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { /* ignore */ }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ } };

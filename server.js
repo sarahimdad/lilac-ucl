@@ -119,4 +119,4 @@ const server = http.createServer(async (req, res) => {
   res.writeHead(200, { 'content-type': MIME[path.extname(file)] || 'application/octet-stream' }).end(fs.readFileSync(file));
 });
 
-server.listen(PORT, () => console.log(`UCL Copilot on http://localhost:${PORT}  [${MOCK ? 'MOCK mode (no API key)' : 'live: ' + MODEL}]`));
+server.listen(PORT, () => console.log(`Bloom on http://localhost:${PORT}  [${MOCK ? 'MOCK mode (no API key)' : 'live: ' + MODEL}]`));
