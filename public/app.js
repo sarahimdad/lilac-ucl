@@ -141,14 +141,17 @@ $('#makePlan').onclick = e => withBusy(e.target, async () => {
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 let rec = null;
 $('#mic').onclick = () => {
-  if (!SR) { $('#micStatus').textContent = 'Voice not supported in this browser (use Chrome/Edge). Type instead.'; return; }
+  if (!SR) { $('#micStatus').textContent = 'This browser has no speech recognition. Open Lilac in Chrome or Edge, or type below (or use Windows dictation: Win+H).'; return; }
   if (rec) { rec.stop(); return; }
   rec = new SR(); rec.lang = 'en-GB'; rec.continuous = true; rec.interimResults = true;
   const base = $('#dump').value ? $('#dump').value + ' ' : '';
+  let err = '';
+  const reasons = { 'not-allowed': 'Mic blocked. Click the 🔒 in the address bar, allow Microphone, and try again.', 'service-not-allowed': 'Mic blocked by the browser or system settings.', 'audio-capture': 'No microphone found. Check it is plugged in and selected.', 'network': 'Speech service unreachable. Check your internet (Chrome sends audio to Google).', 'no-speech': 'Did not hear anything. Speak after the red button pulses.' };
   rec.onresult = ev => { $('#dump').value = base + [...ev.results].map(r => r[0].transcript).join(' '); };
-  rec.onend = () => { rec = null; $('#mic').classList.remove('listening'); $('#mic').textContent = '🎙️ Start talking'; $('#micStatus').textContent = ''; };
-  rec.onerror = ev => { $('#micStatus').textContent = 'Mic error: ' + ev.error; };
-  rec.start(); $('#mic').textContent = '⏹ Stop'; $('#mic').classList.add('listening'); $('#micStatus').textContent = 'Listening... 🎙️';
+  rec.onend = () => { rec = null; $('#mic').classList.remove('listening'); $('#mic').textContent = '🎙️ Start talking'; $('#micStatus').textContent = err; };
+  rec.onerror = ev => { err = reasons[ev.error] || 'Mic error: ' + ev.error; };
+  try { rec.start(); } catch (e) { rec = null; $('#micStatus').textContent = 'Could not start the mic: ' + e.message; return; }
+  $('#mic').textContent = '⏹ Stop'; $('#mic').classList.add('listening'); $('#micStatus').textContent = 'Listening... 🎙️';
 };
 $('#parseDump').onclick = e => withBusy(e.target, async () => {
   const text = $('#dump').value.trim(); if (!text) return;
