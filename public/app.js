@@ -147,7 +147,15 @@ $('#mic').onclick = () => {
   const base = $('#dump').value ? $('#dump').value + ' ' : '';
   let err = '';
   const reasons = { 'not-allowed': 'Mic blocked. Click the 🔒 in the address bar, allow Microphone, and try again.', 'service-not-allowed': 'Mic blocked by the browser or system settings.', 'audio-capture': 'No microphone found. Check it is plugged in and selected.', 'network': 'Speech service unreachable. Check your internet (Chrome sends audio to Google).', 'no-speech': 'Did not hear anything. Speak after the red button pulses.' };
-  rec.onresult = ev => { $('#dump').value = base + [...ev.results].map(r => r[0].transcript).join(' '); };
+  const step = m => { if (rec) $('#micStatus').textContent = m; };
+  rec.onaudiostart = () => step('Mic is on, now speak 🎙️');
+  rec.onspeechstart = () => step('Hearing you... 👂');
+  rec.onspeechend = () => step('Processing...');
+  rec.onnomatch = () => { err = 'Heard sound but could not turn it into words. Speak clearly and a bit closer to the mic.'; };
+  rec.onresult = ev => {
+    step('Got it ✅');
+    $('#dump').value = base + [...ev.results].map(r => r[0].transcript).join(' ');
+  };
   rec.onend = () => { rec = null; $('#mic').classList.remove('listening'); $('#mic').textContent = '🎙️ Start talking'; $('#micStatus').textContent = err; };
   rec.onerror = ev => { err = reasons[ev.error] || 'Mic error: ' + ev.error; };
   try { rec.start(); } catch (e) { rec = null; $('#micStatus').textContent = 'Could not start the mic: ' + e.message; return; }
