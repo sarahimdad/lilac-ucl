@@ -29,15 +29,16 @@ async function claude(system, user) {
 
 const JSON_ONLY = 'Reply with ONLY a single JSON object, no prose, no markdown fences.';
 
-const ICS_HOSTS = new Set(['timetable.apps.ucl.ac.uk', 'timetable.mesh.ucl.ac.uk']);
+const ICS_HOSTS = new Set(['timetable.apps.ucl.ac.uk', 'timetable.mesh.ucl.ac.uk', 'outlook.office365.com', 'outlook.office.com', 'outlook.live.com', 'calendar.google.com']);
 async function fetchICS({ url }) {
   let u;
-  try { u = new URL(url); } catch { throw new Error('That does not look like a URL'); }
-  if (u.protocol !== 'https:' || !ICS_HOSTS.has(u.hostname)) throw new Error('Only UCL timetable links (timetable.apps.ucl.ac.uk) are allowed');
+  try { u = new URL(String(url).replace(/^webcal:/i, 'https:')); } catch { throw new Error('That does not look like a URL'); }
+  if (u.protocol !== 'https:' || !ICS_HOSTS.has(u.hostname)) throw new Error('Only UCL timetable, Outlook and Google calendar links are allowed');
   const r = await fetch(u, { redirect: 'follow' });
   const text = await r.text();
   if (!r.ok) {
     let msg = text; try { msg = JSON.parse(text).message || text; } catch { /* keep raw */ }
+    if (!msg.trim()) msg = `The calendar link returned HTTP ${r.status}. Check you copied the full ICS link and that it is published.`;
     throw new Error(msg.replace(/UPI: \w+/g, 'your account').slice(0, 300));
   }
   return { ics: text };

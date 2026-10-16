@@ -79,6 +79,11 @@
       <input type="url" id="ttUrl" placeholder="https://timetable.apps.ucl.ac.uk/icalendar/..." style="width:100%;padding:8px">
     </label>
     <div class="row"><button id="ttSync" class="primary">Sync timetable</button></div>
+    <h2>Outlook calendar</h2>
+    <p class="muted">In Outlook on the web: Settings → Calendar → Shared calendars → <em>Publish a calendar</em> → choose your calendar, "Can view all details" → Publish → copy the <strong>ICS link</strong>. (Or export a .ics file from Outlook.) Lilac then plans around your meetings.</p>
+    <label>Your Outlook ICS link</label>
+    <input type="url" id="olUrl" placeholder="https://outlook.office365.com/owa/calendar/.../calendar.ics" style="width:100%;padding:8px">
+    <div class="row"><button id="olSync" class="primary">Sync Outlook</button> <label>or file: <input type="file" id="olFile" accept=".ics"></label></div>
     <button id="loadSample">Load sample data</button>
     <button id="clearAll" class="danger">Clear all data</button>
     <p id="setupStatus" class="muted"></p>

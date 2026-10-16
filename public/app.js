@@ -1,6 +1,6 @@
 const $ = s => document.querySelector(s);
 const KEY = 'lilac-ucl-v1';
-let state = { classes: [], deadlines: [], extra: [], blocks: [], clubs: [], tx: [], done: {} };
+let state = { classes: [], deadlines: [], extra: [], blocks: [], clubs: [], tx: [], done: {}, outlook: [] };
 try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { /* ignore */ }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ } };
 
@@ -76,12 +76,20 @@ $('#ttSync').onclick = e => withBusy(e.target, async () => {
   afterImport();
   if (!state.classes.length) $('#setupStatus').textContent = 'Connected, but UCL returned no events yet. Check that your modules are selected on timetable.ucl.ac.uk.';
 });
+$('#olUrl').value = state.olUrl || '';
+$('#olSync').onclick = e => withBusy(e.target, async () => {
+  const url = $('#olUrl').value.trim(); if (!url) return;
+  const { ics } = await api('ics', { url });
+  state.olUrl = url; state.outlook = parseICS(ics).filter(ev => new Date(ev.end || ev.start) > new Date(Date.now() - 864e5));
+  afterImport(); $('#setupStatus').textContent = `Synced ${state.outlook.length} Outlook events.`;
+});
+$('#olFile').onchange = async e => { if (e.target.files[0]) { state.outlook = parseICS(await readFile(e.target.files[0])); afterImport(); $('#setupStatus').textContent = `Loaded ${state.outlook.length} Outlook events.`; } };
 $('#loadSample').onclick = async () => {
   state.classes = parseICS(await (await fetch('/data/sample-timetable.ics')).text());
   state.deadlines = parseICS(await (await fetch('/data/sample-moodle.ics')).text());
   afterImport();
 };
-$('#clearAll').onclick = () => { if (confirm('Delete all saved data in this browser?')) { state = { classes: [], deadlines: [], extra: [], blocks: [], clubs: [], tx: [], done: {} }; save(); renderAll(); } };
+$('#clearAll').onclick = () => { if (confirm('Delete all saved data in this browser?')) { state = { classes: [], deadlines: [], extra: [], blocks: [], clubs: [], tx: [], done: {}, outlook: [] }; save(); renderAll(); } };
 function afterImport() { state.blocks = []; save(); renderAll(); $('#setupStatus').textContent = `Loaded ${state.classes.length} classes and ${state.deadlines.length} deadlines.`; }
 
 // ---------- week agenda ----------
@@ -99,6 +107,7 @@ function renderAgenda() {
   const root = $('#agenda'); root.replaceChildren(); updateProgress();
   const items = [
     ...state.classes.map(e => ({ ...e, kind: 'class' })),
+    ...(state.outlook || []).map(e => ({ ...e, kind: 'event' })),
     ...state.deadlines.map(e => ({ ...e, kind: 'deadline' })),
     ...state.blocks.map(e => ({ ...e, kind: 'study', note: e.why })),
   ].sort((a, b) => a.start.localeCompare(b.start));
@@ -130,7 +139,7 @@ function renderAgenda() {
 }
 $('#makePlan').onclick = e => withBusy(e.target, async () => {
   const msgs = ['Reading your timetable ☕', 'Finding the free gaps 🔍', 'Protecting your evenings 🌙', 'Almost there ✨']; let mi = 0; $('#planStatus').textContent = msgs[0]; const iv = setInterval(() => $('#planStatus').textContent = msgs[++mi % msgs.length], 1400);
-  let r; try { r = await api('plan', { events: state.classes, deadlines: state.deadlines, tasks: state.extra }); } finally { clearInterval(iv); $('#planStatus').textContent = ''; }
+  let r; try { r = await api('plan', { events: [...state.classes, ...(state.outlook || [])], deadlines: state.deadlines, tasks: state.extra }); } finally { clearInterval(iv); $('#planStatus').textContent = ''; }
   state.blocks = r.blocks || []; save();
   $('#planSummary').textContent = r.summary || '';
   $('#warnings').replaceChildren(...(r.warnings || []).map(w => el('li', null, w)));
