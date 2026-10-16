@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Lilac poster</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{width:1200px;height:1600px;font-family:"Segoe UI",system-ui,sans-serif;color:#241338;background:#f4effb;overflow:hidden;position:relative}
+.glow{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55}
+.g1{width:600px;height:600px;background:#a867ff;top:-200px;right:-150px}
+.g2{width:500px;height:500px;background:#ff9fcf;bottom:-180px;left:-150px}
+.hero{position:relative;padding:56px 80px 40px;background:linear-gradient(120deg,#3b2252,#5b2a8c 60%,#8a3ffc);color:#fff;border-radius:0 0 60px 60px;box-shadow:0 20px 50px rgba(59,34,82,.3)}
+.hero h1{font-size:150px;line-height:1;letter-spacing:-3px}
+.hero h1 span{font-size:110px}
+.tag{font-size:44px;margin-top:14px;font-weight:600}
+.sub{font-size:26px;margin-top:18px;opacity:.9;max-width:900px;line-height:1.4}
+.wrap{position:relative;padding:36px 70px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.card{background:#fff;border-radius:28px;padding:22px 30px;box-shadow:0 10px 30px rgba(59,34,82,.12);border-top:8px solid #8a3ffc}
+.card:nth-child(2n){border-top-color:#ff6fb5}
+.card .ic{font-size:58px}
+.card h3{font-size:31px;margin:8px 0 8px}
+.card p{font-size:21px;line-height:1.4;color:#5d5072}
+.how{margin-top:30px;background:#3b2252;color:#fff;border-radius:28px;padding:30px 36px;display:flex;gap:20px;align-items:center;justify-content:space-between}
+.step{flex:1;text-align:center;font-size:21px;line-height:1.35}
+.step b{display:block;font-size:30px;margin-bottom:4px}
+.arrow{font-size:40px;color:#ff9fcf}
+.foot{position:absolute;bottom:0;left:0;right:0;padding:0 50px 28px;display:flex;justify-content:space-between;gap:12px;white-space:nowrap;font-size:19px;font-weight:600;color:#3b2252}
+.chip{background:#fff;border-radius:99px;padding:8px 18px;box-shadow:0 6px 16px rgba(59,34,82,.12)}
+</style></head><body>
+<div class="glow g1"></div><div class="glow g2"></div>
+<div class="hero">
+  <h1><span>💜</span> Lilac</h1>
+  <div class="tag">Your UCL week, made lighter.</div>
+  <div class="sub">Timetables, deadlines, money and clubs live in a dozen places. Lilac pulls them into one joyful dashboard, and Claude turns your stress into a plan.</div>
+</div>
+<div class="wrap">
+  <div class="grid">
+    <div class="card"><div class="ic">🎙️</div><h3>Talk it out</h3><p>Ramble about what's on your plate. Claude turns it into prioritised tasks with due dates and time estimates.</p></div>
+    <div class="card"><div class="ic">✨</div><h3>AI week planner</h3><p>Study blocks placed around lectures and meetings, weighted by deadline, with breaks and free evenings protected.</p></div>
+    <div class="card"><div class="ic">📅</div><h3>Syncs your calendars</h3><p>UCL timetable, Moodle deadlines and Outlook, by pasting a link or uploading an .ics file.</p></div>
+    <div class="card"><div class="ic">💷</div><h3>Budget buddy</h3><p>Drop in a Revolut or bank CSV. Claude sorts spending and gives kind, blunt student insights.</p></div>
+    <div class="card"><div class="ic">🍕</div><h3>Club events</h3><p>Tick your societies to see what's on, with free food flagged. Never miss a free pizza night.</p></div>
+    <div class="card"><div class="ic">🎉</div><h3>Joyful and private</h3><p>Tick tasks for confetti and a progress bar. No accounts: your data stays in your browser.</p></div>
+  </div>
+  <div class="how">
+    <div class="step"><b>1. Connect</b>paste your calendar links</div><div class="arrow">→</div>
+    <div class="step"><b>2. Talk</b>say what's stressing you</div><div class="arrow">→</div>
+    <div class="step"><b>3. Plan</b>get a plan you can tick off</div>
+  </div>
+</div>
+<div class="foot"><span class="chip">Built with Claude</span><span class="chip">Claude Campus Hackathon · Better Student Life</span><span class="chip">github.com/sarahimdad/lilac-ucl</span></div>
+</body></html>
