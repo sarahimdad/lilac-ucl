@@ -13,18 +13,28 @@ const MOCK = !KEY;
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.ics': 'text/calendar', '.csv': 'text/csv' };
 
-async function claude(system, user) {
+async function claudeOnce(system, user) {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-api-key': KEY, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: MODEL, max_tokens: 4096, system, messages: [{ role: 'user', content: user }] }),
+    body: JSON.stringify({ model: MODEL, max_tokens: 8000, system, messages: [{ role: 'user', content: user }] }),
   });
   if (!res.ok) throw new Error(`Claude API ${res.status}: ${await res.text()}`);
   const data = await res.json();
   const text = data.content.map(b => b.text || '').join('');
   const m = text.match(/\{[\s\S]*\}/);
-  if (!m) throw new Error('No JSON in model reply');
+  if (!m) { console.warn('No JSON. stop_reason=' + data.stop_reason, JSON.stringify(data.usage), data.content.map(b => b.type + ':' + (b.text || '').length).join(',')); throw new Error('No JSON in model reply'); }
   return JSON.parse(m[0]);
+}
+
+// Models occasionally emit slightly broken JSON on long replies; retry once before failing.
+async function claude(system, user) {
+  try { return await claudeOnce(system, user); }
+  catch (e) {
+    if (!(e instanceof SyntaxError) && !/No JSON/.test(e.message)) throw e;
+    console.warn('Bad JSON from model, retrying once:', e.message);
+    return claudeOnce(system + ' Keep every string short and never use double quotes or line breaks inside strings.', user);
+  }
 }
 
 const JSON_ONLY = 'Reply with ONLY a single JSON object, no prose, no markdown fences.';
@@ -50,7 +60,7 @@ const tasks = {
     if (MOCK) return mockPlan(deadlines, extra);
     return claude(
       `You are a study planner for a UCL student. Given their fixed classes/events, deadlines and extra tasks, schedule realistic study blocks in the free gaps (08:00-21:00, not overlapping events, max 4h per day of study, include breaks and an evening off at least once). Prioritise by deadline date and weighting. ${JSON_ONLY}
-Schema: {"summary": string, "blocks": [{"start": ISO datetime, "end": ISO datetime, "title": string, "why": string}], "warnings": [string]}`,
+Keep "why" under 12 words and "summary" under 40 words; at most 2 warnings. Never overlap a block with a class or event. Schema: {"summary": string, "blocks": [{"start": ISO datetime, "end": ISO datetime, "title": string, "why": string}], "warnings": [string]}`,
       JSON.stringify({ events, deadlines, extra }));
   },
   async braindump({ text }) {
